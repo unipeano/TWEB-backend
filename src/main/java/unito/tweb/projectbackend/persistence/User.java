@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -15,6 +16,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role", nullable = false)
+    private String role;
 
     public User() {}
 
@@ -30,6 +34,10 @@ public class User {
     @JsonIgnore
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
 

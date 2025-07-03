@@ -19,17 +19,25 @@ public class Recipe {
     @Column(name = "image", nullable = false)
     private String image;
 
+    @Column(name = "instructions", nullable = false)
+    private String instructions;
+
+    @Column(name = "preparation_time", nullable = false)
+    private Integer preparationTime;
+
     @Column(name = "author", nullable = false)
     private String author;
 
     public Recipe() {
     }
 
-    public Recipe(String title, String description, String image, String author) {
+    public Recipe(String title, String description, String image, String instructions, Integer preparationTime, String author) {
         this.title = title;
         this.description = description;
         this.image = image;
+        this.instructions = instructions;
         this.author = author;
+        this.preparationTime = preparationTime;
     }
 
     public Integer getId() {
@@ -46,6 +54,12 @@ public class Recipe {
     }
     public String getAuthor() {
         return author;
+    }
+    public String getInstructions() {
+        return instructions;
+    }
+    public Integer getPreparationTime() {
+        return preparationTime;
     }
 
 }

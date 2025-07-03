@@ -14,7 +14,9 @@ public class UserService {
 
      @PostConstruct
      public void init() {
-         userRepository.save(new User("Mattia", "Peano"));
+         userRepository.save(new User("Mattia", "Peano", "CHEF"));
+         userRepository.save(new User("Pietro", "Pietro", "USER"));
+         userRepository.save(new User("Giorgio", "Gallina", "ADMIN"));
      }
 
     public boolean userDoesNotExist(String username) {

@@ -40,5 +40,25 @@ public class User {
     public String getRole() {
         return role;
     }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return role.equals("ADMIN");
+    }
+
+    @JsonIgnore
+    public boolean isUser() {
+        return role.equals("USER");
+    }
+
+    @JsonIgnore
+    public boolean isChef() {
+        return role.equals("CHEF");
+    }
+
+    public void setChefRole(){
+        this.role = "CHEF";
+    }
+
 }
 

@@ -119,7 +119,7 @@ public class RecipeService {
     }
 
     public List<Recipe> searchRecipeByAuthor(String author) {
-    return this.recipeRepository.findByAuthorContainingIgnoreCase(author);
+        return this.recipeRepository.findByAuthorContainingIgnoreCase(author);
     }
 
     @Transactional
@@ -138,5 +138,23 @@ public class RecipeService {
         return this.categoryRepository.findAll().stream()
                 .map(Category::getName)
                 .toList();
+    }
+
+    public List<Recipe> searchRecipeByCategory(String category) {
+        Optional<Integer> categoryId = this.categoryRepository.findIdByName(category);
+        if (categoryId.isEmpty()) {
+            return List.of();
+        }
+        return this.recipeCategoryRepository.findByCategoryId(categoryId.get()).stream()
+                .map(RecipeCategory::getRecipeId)
+                .map(this.recipeRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+
+    }
+
+    public boolean categoryExists(String category) {
+        return this.categoryRepository.existsByNameIgnoreCase(category);
     }
 }

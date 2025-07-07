@@ -82,4 +82,13 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getCategories());
     }
 
+
+    @GetMapping("/recipes/category/{category}")
+    public ResponseEntity<List<Recipe>> recipesByCategory(@PathVariable String category) {
+        String decodedCategory = category.replace("-", " ");
+        if (!recipeService.categoryExists(decodedCategory)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(recipeService.searchRecipeByCategory(decodedCategory));
+    }
 }

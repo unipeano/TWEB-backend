@@ -77,4 +77,9 @@ public class RecipeController {
     }
 
 
+    @GetMapping("/recipes/categories")
+    public ResponseEntity<List<String>> categories() {
+        return ResponseEntity.ok(recipeService.getCategories());
+    }
+
 }

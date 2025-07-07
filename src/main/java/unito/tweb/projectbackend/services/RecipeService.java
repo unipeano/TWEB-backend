@@ -133,4 +133,10 @@ public class RecipeService {
         // Delete the recipe itself
         this.recipeRepository.deleteById(id);
     }
+
+    public List<String> getCategories() {
+        return this.categoryRepository.findAll().stream()
+                .map(Category::getName)
+                .toList();
+    }
 }

@@ -1,6 +1,7 @@
 package unito.tweb.projectbackend.services;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import unito.tweb.projectbackend.dto.IngredientDTO;
@@ -18,18 +19,21 @@ public class RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeCategoryRepository recipeCategoryRepository;
     private final UserRepository userRepository;
+    private final RecipeBookService recipeBookService;
     public RecipeService(RecipeRepository recipeRepository,
                          RecipeIngredientRepository recipeIngredientRepository,
                          IngredientRepository ingredientRepository,
                          CategoryRepository categoryRepository,
                          RecipeCategoryRepository recipeCategoryRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         RecipeBookService recipeBookService) {
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.ingredientRepository = ingredientRepository;
         this.categoryRepository = categoryRepository;
         this.recipeCategoryRepository = recipeCategoryRepository;
         this.userRepository = userRepository;
+        this.recipeBookService = recipeBookService;
     }
 
     @PostConstruct
@@ -66,7 +70,7 @@ public class RecipeService {
 
     @Transactional
     public Recipe addRecipe(RecipeDTO request) {
-
+        // aggiungere forse check sull'author
         Recipe recipe = new Recipe(
                 request.getTitle(),
                 request.getDescription(),
@@ -116,5 +120,17 @@ public class RecipeService {
 
     public List<Recipe> searchRecipeByAuthor(String author) {
     return this.recipeRepository.findByAuthorContainingIgnoreCase(author);
+    }
+
+    @Transactional
+    public void deleteRecipe(Integer id) {
+        // Delete recipe ingredients
+        this.recipeIngredientRepository.deleteAllByRecipeId(id);
+        // Delete recipe categories
+        this.recipeCategoryRepository.deleteAllByRecipeId(id);
+        // Remove recipe from users' recipe books
+        this.recipeBookService.removeRecipe(id);
+        // Delete the recipe itself
+        this.recipeRepository.deleteById(id);
     }
 }

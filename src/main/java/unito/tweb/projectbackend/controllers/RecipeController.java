@@ -1,10 +1,13 @@
 package unito.tweb.projectbackend.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unito.tweb.projectbackend.dto.RecipeDTO;
 import unito.tweb.projectbackend.persistence.Recipe;
+import unito.tweb.projectbackend.persistence.User;
 import unito.tweb.projectbackend.services.RecipeService;
+import unito.tweb.projectbackend.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class RecipeController {
     RecipeService recipeService;
+    UserService userService;
 
-    public RecipeController(RecipeService recipeService) {
+    public RecipeController(RecipeService recipeService, UserService userService) {
         this.recipeService = recipeService;
+        this.userService = userService;
     }
 
 
@@ -48,5 +53,28 @@ public class RecipeController {
     public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe) {
         return ResponseEntity.ok(recipeService.addRecipe(recipe));
     }
+
+    @DeleteMapping("/recipes/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Integer id, HttpSession session) {
+        Optional<Recipe> recipe = recipeService.getRecipeById(id);
+        String username = (String) session.getAttribute("username");
+        Optional<User> user = userService.getUserByUsername(username);
+
+        if (recipe.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (user.isEmpty()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        if (!recipe.get().getAuthor().equals(username) && !user.get().isAdmin()) {
+            return ResponseEntity.status(403).build();
+        }
+
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

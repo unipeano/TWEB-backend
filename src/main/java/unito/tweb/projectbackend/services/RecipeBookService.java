@@ -4,6 +4,8 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import unito.tweb.projectbackend.persistence.*;
 
+import java.util.Collections;
+
 @Service
 public class RecipeBookService {
 
@@ -30,4 +32,7 @@ public class RecipeBookService {
     }
 
 
+    public void removeRecipe(Integer recipeId) {
+        this.recipeBookRecipeRepository.deleteAllByRecipeId(recipeId);
+    }
 }

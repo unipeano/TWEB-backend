@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import unito.tweb.projectbackend.persistence.User;
 import unito.tweb.projectbackend.persistence.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -20,10 +22,14 @@ public class UserService {
      }
 
     public boolean userDoesNotExist(String username) {
-        return false; // TODO: Implement this method
+        return !this.userRepository.existsById(username);
     }
 
     public boolean checkCredentials(String username, String password) {
         return this.userRepository.existsByUsernameAndPassword(username, password);
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return this.userRepository.findById(username);
     }
 }

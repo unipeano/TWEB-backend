@@ -25,10 +25,13 @@ public class RecipeController {
 
 
     @GetMapping("/recipes/{id}")
-    public ResponseEntity<Recipe> recipeById(@PathVariable Integer id) {
+    public ResponseEntity<RecipeDTO> recipeById(@PathVariable Integer id) {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
         if (recipe.isPresent()) {
-            return ResponseEntity.ok(recipe.get());
+            RecipeDTO recipeDTO = new RecipeDTO(recipe.get());
+            recipeDTO.setIngredients(recipeService.getIngredientsByRecipeId(id));
+            recipeDTO.setCategories(recipeService.getCategoriesByRecipeId(id));
+            return ResponseEntity.ok(recipeDTO);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -49,9 +52,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllRecipes());
     }
 
+    // ricordarsi degli ID (server)
     @PostMapping("/recipes")
     public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe) {
         return ResponseEntity.ok(recipeService.addRecipe(recipe));
+        // posso anche restituire solo l'id da aggiornare?
     }
 
     @DeleteMapping("/recipes/{id}")

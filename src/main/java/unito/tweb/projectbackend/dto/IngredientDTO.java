@@ -6,6 +6,11 @@ public class IngredientDTO {
     private String quantity;
 
 
+    public IngredientDTO(String name, String quantity) {
+        this.name = name;
+        this.quantity = quantity;
+    }
+
     public String getName() {
         return name;
     }

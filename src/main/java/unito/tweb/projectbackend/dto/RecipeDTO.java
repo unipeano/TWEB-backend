@@ -1,9 +1,12 @@
 package unito.tweb.projectbackend.dto;
 
+import unito.tweb.projectbackend.persistence.Recipe;
+
 import java.util.List;
 
 public class RecipeDTO {
 
+    private Integer id;
     private String title;
     private String description;
     private String image;
@@ -14,6 +17,24 @@ public class RecipeDTO {
     private List<IngredientDTO> ingredients;
     private List<String> categories;
 
+    public RecipeDTO(Recipe recipe) {
+        this.id = recipe.getId();
+        this.title = recipe.getTitle();
+        this.description = recipe.getDescription();
+        this.image = recipe.getImage();
+        this.instructions = recipe.getInstructions();
+        this.preparationTime = recipe.getPreparationTime();
+        this.servings = recipe.getServings();
+        this.author = recipe.getAuthor();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

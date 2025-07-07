@@ -72,6 +72,7 @@ public class RecipeService {
     public Recipe addRecipe(RecipeDTO request) {
         // aggiungere forse check sull'author
         Recipe recipe = new Recipe(
+                // ignoro l'id, se presente, per creare una nuova ricetta
                 request.getTitle(),
                 request.getDescription(),
                 request.getImage(),
@@ -80,6 +81,11 @@ public class RecipeService {
                 request.getServings(),
                 request.getAuthor()
         );
+
+        if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
+            throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
+            // consigliabile anche stampare a video la stack trace dell'eccezione, per consentirvi il debugging
+        }
         recipeRepository.save(recipe);
 
         for (IngredientDTO ingredientDTO : request.getIngredients()) {
@@ -156,5 +162,23 @@ public class RecipeService {
 
     public boolean categoryExists(String category) {
         return this.categoryRepository.existsByNameIgnoreCase(category);
+    }
+
+    public List<IngredientDTO> getIngredientsByRecipeId(Integer id) {
+        return this.recipeIngredientRepository.findByRecipeId(id).stream()
+                .map(ri -> {
+                    Ingredient ingredient = this.ingredientRepository.findById(ri.getIngredientId())
+                            .orElseThrow(() -> new IllegalArgumentException("Ingredient not found"));
+                    return new IngredientDTO(ingredient.getName(), ri.getQuantity());
+                })
+                .toList();
+    }
+
+    public List<String> getCategoriesByRecipeId(Integer id) {
+        return this.recipeCategoryRepository.findByRecipeId(id).stream()
+                .map(rc -> this.categoryRepository.findById(rc.getCategoryId())
+                        .orElseThrow(() -> new IllegalArgumentException("Category not found")))
+                .map(Category::getName)
+                .toList();
     }
 }

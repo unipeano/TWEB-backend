@@ -4,11 +4,13 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unito.tweb.projectbackend.persistence.Recipe;
 import unito.tweb.projectbackend.persistence.RecipeBook;
 import unito.tweb.projectbackend.services.RecipeBookService;
 import unito.tweb.projectbackend.services.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
@@ -55,6 +57,35 @@ public class RecipeBookController {
         }
     }
 
+    @PostMapping("/me/recipebooks/{recipeBookId}/recipes")
+    public ResponseEntity<Void> addRecipeToRecipeBook(@PathVariable Integer recipeBookId, @RequestBody Recipe recipe, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        Optional<String> recipeBookOwner = recipeBookService.getRecipeBookOwner(recipeBookId);
+        if (recipeBookOwner.isEmpty() || !recipeBookService.recipeExists(recipe.getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        if(!recipeBookOwner.get().equals(username)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            recipeBookService.addRecipeToRecipeBook(recipeBookId, recipe.getId());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+    @GetMapping("/users/{username}/recipebooks/{recipeBookId}/recipes")
+    public ResponseEntity<List<Recipe>> getRecipesInRecipeBook(@PathVariable String username, @PathVariable Integer recipeBookId) {
+        if (!recipeBookService.isRecipeBookOwner(recipeBookId, username)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        List<Recipe> recipes = recipeBookService.getRecipesInRecipeBook(recipeBookId);
+        return ResponseEntity.ok(recipes);
+    }
 
 
 }

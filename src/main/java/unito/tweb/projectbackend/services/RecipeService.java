@@ -106,7 +106,6 @@ public class RecipeService {
     }
 
 
-
     public Optional<Recipe> getRecipeById(Integer id) {
         return this.recipeRepository.findById(id);
     }
@@ -142,6 +141,12 @@ public class RecipeService {
     public List<String> getCategories() {
         return this.categoryRepository.findAll().stream()
                 .map(Category::getName)
+                .toList();
+    }
+
+    public List<String> getIngredients() {
+        return this.ingredientRepository.findAll().stream()
+                .map(Ingredient::getName)
                 .toList();
     }
 

@@ -96,6 +96,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getCategories());
     }
 
+    @GetMapping("/recipes/ingredients")
+    public ResponseEntity<List<String>> ingredients() {
+        return ResponseEntity.ok(recipeService.getIngredients());
+    }
+
 
     @GetMapping("/recipes/category/{category}")
     public ResponseEntity<List<Recipe>> recipesByCategory(@PathVariable String category) {

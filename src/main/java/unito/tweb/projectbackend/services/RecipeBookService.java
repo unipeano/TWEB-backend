@@ -1,10 +1,12 @@
 package unito.tweb.projectbackend.services;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import unito.tweb.projectbackend.persistence.*;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class RecipeBookService {
@@ -34,5 +36,9 @@ public class RecipeBookService {
 
     public void removeRecipe(Integer recipeId) {
         this.recipeBookRecipeRepository.deleteAllByRecipeId(recipeId);
+    }
+
+    public List<RecipeBook> getRecipeBooksForUser(String username) {
+        return recipeBookRepository.findByRecipeBookOwner(username);
     }
 }

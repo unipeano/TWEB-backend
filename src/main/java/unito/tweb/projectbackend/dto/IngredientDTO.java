@@ -11,6 +11,9 @@ public class IngredientDTO {
         this.quantity = quantity;
     }
 
+    public IngredientDTO() {
+    }
+
     public String getName() {
         return name;
     }

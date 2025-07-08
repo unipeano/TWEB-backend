@@ -24,11 +24,17 @@ public class RecipeBookService {
 
     @PostConstruct
     public void init() {
+        this.createRecipeBook("My recipes", "Mattia");
         this.createRecipeBook("Favorites", "Mattia");
+        this.createRecipeBook("My recipes", "Pietro");
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(1, 1));
     }
 
     public RecipeBook createRecipeBook(String name, String recipeBookOwner) {
+        if(!this.searchRecipeBookByNameRecipeBookOwner(name, recipeBookOwner).isEmpty()) {
+            throw new IllegalArgumentException("A recipe book with the same name by the same owner already exists.");
+            // consigliabile anche stampare a video la stack trace dell'eccezione, per consentirvi il debugging
+        }
         RecipeBook recipeBook = new RecipeBook(name, recipeBookOwner);
         return recipeBookRepository.save(recipeBook);
     }
@@ -40,5 +46,9 @@ public class RecipeBookService {
 
     public List<RecipeBook> getRecipeBooksForUser(String username) {
         return recipeBookRepository.findByRecipeBookOwner(username);
+    }
+
+    public List<RecipeBook> searchRecipeBookByNameRecipeBookOwner(String name, String recipeBookOwner) {
+        return this.recipeBookRepository.findByNameContainingAndRecipeBookOwnerContainingAllIgnoreCase(name, recipeBookOwner);
     }
 }

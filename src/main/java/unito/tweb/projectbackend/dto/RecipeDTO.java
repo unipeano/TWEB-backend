@@ -28,6 +28,9 @@ public class RecipeDTO {
         this.author = recipe.getAuthor();
     }
 
+    public RecipeDTO(){
+    }
+
     public Integer getId() {
         return id;
     }

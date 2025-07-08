@@ -70,6 +70,11 @@ public class RecipeService {
 
     @Transactional
     public Recipe addRecipe(RecipeDTO request) {
+        if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
+            throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
+            // consigliabile anche stampare a video la stack trace dell'eccezione, per consentirvi il debugging
+        }
+
         // aggiungere forse check sull'author
         Recipe recipe = new Recipe(
                 // ignoro l'id, se presente, per creare una nuova ricetta
@@ -81,11 +86,6 @@ public class RecipeService {
                 request.getServings(),
                 request.getAuthor()
         );
-
-        if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
-            throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
-            // consigliabile anche stampare a video la stack trace dell'eccezione, per consentirvi il debugging
-        }
         recipeRepository.save(recipe);
 
         for (IngredientDTO ingredientDTO : request.getIngredients()) {

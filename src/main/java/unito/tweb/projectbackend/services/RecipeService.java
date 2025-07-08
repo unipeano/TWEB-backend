@@ -72,10 +72,8 @@ public class RecipeService {
     public Recipe addRecipe(RecipeDTO request) {
         if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
             throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
-            // consigliabile anche stampare a video la stack trace dell'eccezione, per consentirvi il debugging
         }
 
-        // aggiungere forse check sull'author
         Recipe recipe = new Recipe(
                 // ignoro l'id, se presente, per creare una nuova ricetta
                 request.getTitle(),
@@ -92,6 +90,7 @@ public class RecipeService {
             Ingredient ingredient = ingredientRepository.findByName(ingredientDTO.getName())
                     .orElseGet(() -> ingredientRepository.save(new Ingredient(ingredientDTO.getName())));
             // probabilmente non serve il check su null, ma lo metto per sicurezza
+            // (il client non dovrebbe inventarsi ingredienti)
 
             recipeIngredientRepository.save(new RecipeIngredient(recipe.getId(), ingredient.getId(), ingredientDTO.getQuantity()));
         }
@@ -99,7 +98,7 @@ public class RecipeService {
         for (String categoryName : request.getCategories()) {
             Category category = categoryRepository.findByName(categoryName)
                     .orElseGet(() -> categoryRepository.save(new Category(categoryName)));
-
+            // (il client non dovrebbe inventarsi categorie)
             recipeCategoryRepository.save(new RecipeCategory(recipe.getId(), category.getId()));
         }
 
@@ -166,19 +165,21 @@ public class RecipeService {
 
     public List<IngredientDTO> getIngredientsByRecipeId(Integer id) {
         return this.recipeIngredientRepository.findByRecipeId(id).stream()
-                .map(ri -> {
-                    Ingredient ingredient = this.ingredientRepository.findById(ri.getIngredientId())
-                            .orElseThrow(() -> new IllegalArgumentException("Ingredient not found"));
-                    return new IngredientDTO(ingredient.getName(), ri.getQuantity());
-                })
+                .map(ri -> this.ingredientRepository.findById(ri.getIngredientId())
+                        .map(ingredient -> new IngredientDTO(ingredient.getName(), ri.getQuantity())))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
+        // se non trova l'ingrediente lo ignora (no exception)
     }
 
     public List<String> getCategoriesByRecipeId(Integer id) {
         return this.recipeCategoryRepository.findByRecipeId(id).stream()
-                .map(rc -> this.categoryRepository.findById(rc.getCategoryId())
-                        .orElseThrow(() -> new IllegalArgumentException("Category not found")))
+                .map(rc -> this.categoryRepository.findById(rc.getCategoryId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(Category::getName)
                 .toList();
+        // se non trova la categoria la ignora (no exception)
     }
 }

@@ -1,6 +1,7 @@
 package unito.tweb.projectbackend.controllers;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unito.tweb.projectbackend.dto.RecipeDTO;
@@ -54,9 +55,18 @@ public class RecipeController {
 
     // ricordarsi degli ID (server)
     @PostMapping("/recipes")
-    public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe) {
-        return ResponseEntity.ok(recipeService.addRecipe(recipe));
-        // posso anche restituire solo l'id da aggiornare?
+    public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (!recipe.getAuthor().equals(username)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            Recipe newRecipe = recipeService.addRecipe(recipe);
+            return ResponseEntity.ok(newRecipe); // posso anche restituire solo l'id da aggiornare?
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @DeleteMapping("/recipes/{id}")
@@ -69,12 +79,11 @@ public class RecipeController {
             return ResponseEntity.notFound().build();
         }
 
-        if (user.isEmpty()) {
-            return ResponseEntity.status(401).build();
-        }
+        // in teoria non serve fare il check su user perchè ci pensa il filter a bloccare le richieste non autenticate
+        // in caso di autenticazione invece, il logincontroller mette l'username (controllato) nella sessione
 
         if (!recipe.get().getAuthor().equals(username) && !user.get().isAdmin()) {
-            return ResponseEntity.status(403).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         recipeService.deleteRecipe(id);

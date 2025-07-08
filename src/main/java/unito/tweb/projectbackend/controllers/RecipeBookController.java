@@ -1,5 +1,7 @@
 package unito.tweb.projectbackend.controllers;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unito.tweb.projectbackend.persistence.RecipeBook;
@@ -21,23 +23,38 @@ public class RecipeBookController {
         this.userService = userService;
     }
 
-
-    @GetMapping("/users/{username}/recipebooks")
-    public ResponseEntity<List<RecipeBook>> recipeBooks(@PathVariable String username) {
-        if (userService.userDoesNotExist(username)) return ResponseEntity.notFound().build();
+    @GetMapping("/me/recipebooks")
+    public ResponseEntity<List<RecipeBook>> myRecipeBooks(HttpSession session) {
+        String username = (String) session.getAttribute("username");
         return ResponseEntity.ok(recipeBookService.getRecipeBooksForUser(username));
     }
 
-    @PostMapping("/users/{username}/recipebooks")
-    public ResponseEntity<RecipeBook> createRecipeBook(@PathVariable String username,
-                                                        @RequestBody RecipeBook recipeBook) {
+
+    @GetMapping("/users/{username}/recipebooks")
+    public ResponseEntity<List<RecipeBook>> recipeBooks(@PathVariable String username, @RequestParam (required = false) String name) {
         if (userService.userDoesNotExist(username)) return ResponseEntity.notFound().build();
-        if (recipeBook.getRecipeBookOwner() == null || !recipeBook.getRecipeBookOwner().equals(username)) {
-            return ResponseEntity.badRequest().build();
+        if (name != null && !name.isEmpty()) {
+            return ResponseEntity.ok(recipeBookService.searchRecipeBookByNameRecipeBookOwner(name, username));
         }
-        RecipeBook createdRecipeBook = recipeBookService.createRecipeBook(recipeBook.getName(), username);
-        return ResponseEntity.ok(createdRecipeBook);
+        return ResponseEntity.ok(recipeBookService.getRecipeBooksForUser(username));
     }
+
+    @PostMapping("me/recipebooks")
+    public ResponseEntity<RecipeBook> createRecipeBook(@RequestBody RecipeBook recipeBook, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (!recipeBook.getRecipeBookOwner().equals(username)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        try {
+            RecipeBook createdRecipeBook = recipeBookService.createRecipeBook(recipeBook.getName(), username);
+            return ResponseEntity.ok(createdRecipeBook);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            // si potrebbe scrivere nel body un messaggio di errore più specifico
+        }
+    }
+
 
 
 }

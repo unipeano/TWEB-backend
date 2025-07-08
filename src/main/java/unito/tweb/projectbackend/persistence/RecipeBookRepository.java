@@ -13,4 +13,7 @@ public interface RecipeBookRepository extends JpaRepository<RecipeBook, Integer>
     Optional<String> findOwnerById(@Param("id") Integer id);
     List<RecipeBook> findByNameContainingAndRecipeBookOwnerContainingAllIgnoreCase(String name, String recipeBookOwner);
     boolean existsByIdAndRecipeBookOwner(Integer id, String recipeBookOwner);
+
+    @Query("SELECT rb.id FROM RecipeBook rb WHERE rb.recipeBookOwner ILIKE :recipeBookOwner AND rb.name ILIKE :name")
+    Optional<Integer> findIdByRecipeBookOwnerAndName(String recipeBookOwner, String name);
 }

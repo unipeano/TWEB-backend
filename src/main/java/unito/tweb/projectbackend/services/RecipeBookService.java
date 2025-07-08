@@ -65,6 +65,15 @@ public class RecipeBookService {
         }
     }
 
+    public void addRecipeToDefaultRecipeBook(String recipeBookOwner, Integer recipeId) {
+        Optional<Integer> recipeBookId = this.recipeBookRepository.findIdByRecipeBookOwnerAndName(recipeBookOwner, "My recipes");
+        if (recipeBookId.isPresent()) {
+            this.addRecipeToRecipeBook(recipeBookId.get(), recipeId);
+        } else {
+            throw new IllegalArgumentException("Recipe book 'My recipes' not found for user " + recipeBookOwner);
+        }
+    }
+
     public boolean isRecipeBookOwner(Integer recipeBookId, String username) {
         return this.recipeBookRepository.existsByIdAndRecipeBookOwner(recipeBookId, username);
     }

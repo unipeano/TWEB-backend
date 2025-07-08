@@ -73,9 +73,15 @@ public class RecipeService {
         if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
             throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
         }
+        Recipe recipe = saveBasicRecipe(request);
+        recipeBookService.addRecipeToDefaultRecipeBook(request.getAuthor(), recipe.getId());
+        saveIngredientsToRecipe(recipe.getId(), request.getIngredients());
+        saveCategoriesToRecipe(recipe.getId(), request.getCategories());
+        return recipe;
+    }
 
+    private Recipe saveBasicRecipe(RecipeDTO request) {
         Recipe recipe = new Recipe(
-                // ignoro l'id, se presente, per creare una nuova ricetta
                 request.getTitle(),
                 request.getDescription(),
                 request.getImage(),
@@ -84,25 +90,25 @@ public class RecipeService {
                 request.getServings(),
                 request.getAuthor()
         );
-        recipeRepository.save(recipe);
+        return recipeRepository.save(recipe);
+    }
 
-        for (IngredientDTO ingredientDTO : request.getIngredients()) {
-            Ingredient ingredient = ingredientRepository.findByName(ingredientDTO.getName())
-                    .orElseGet(() -> ingredientRepository.save(new Ingredient(ingredientDTO.getName())));
+    private void saveIngredientsToRecipe(Integer recipeId, List<IngredientDTO> ingredients) {
+        ingredients.forEach(ingredient -> {
+            Ingredient ing = ingredientRepository.findByName(ingredient.getName())
+                    .orElseGet(() -> ingredientRepository.save(new Ingredient(ingredient.getName())));
             // probabilmente non serve il check su null, ma lo metto per sicurezza
             // (il client non dovrebbe inventarsi ingredienti)
+            recipeIngredientRepository.save(new RecipeIngredient(recipeId, ing.getId(), ingredient.getQuantity()));
+        });
+    }
 
-            recipeIngredientRepository.save(new RecipeIngredient(recipe.getId(), ingredient.getId(), ingredientDTO.getQuantity()));
-        }
-
-        for (String categoryName : request.getCategories()) {
-            Category category = categoryRepository.findByName(categoryName)
-                    .orElseGet(() -> categoryRepository.save(new Category(categoryName)));
-            // (il client non dovrebbe inventarsi categorie)
-            recipeCategoryRepository.save(new RecipeCategory(recipe.getId(), category.getId()));
-        }
-
-        return recipe;
+    private void saveCategoriesToRecipe(Integer recipeId, List<String> categories) {
+        categories.forEach(category -> {
+            Category cat = categoryRepository.findByName(category)
+                    .orElseGet(() -> categoryRepository.save(new Category(category)));
+            recipeCategoryRepository.save(new RecipeCategory(recipeId, cat.getId()));
+        });
     }
 
 

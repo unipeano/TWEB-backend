@@ -88,4 +88,10 @@ public class RecipeBookController {
     }
 
 
+    @GetMapping("/users/recipebooks")
+    public ResponseEntity<List<RecipeBook>> getAllRecipeBooks() {
+        return ResponseEntity.ok(recipeBookService.getAllRecipeBooks());
+    }
+
+
 }

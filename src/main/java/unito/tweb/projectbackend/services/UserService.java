@@ -16,9 +16,15 @@ public class UserService {
 
      @PostConstruct
      public void init() {
-         userRepository.save(new User("Mattia", "Peano", "CHEF"));
+         userRepository.save(new User("Mattia", "Mattia", "CHEF"));
+         userRepository.save(new User("Andrea", "Andrea", "CHEF"));
+         userRepository.save(new User("Antonio", "Antonio", "CHEF"));
+         userRepository.save(new User("Elena", "Elena", "CHEF"));
+         userRepository.save(new User("Paola", "Paola", "USER"));
+         userRepository.save(new User("Alessandro", "Alessandro", "USER"));
          userRepository.save(new User("Pietro", "Pietro", "USER"));
-         userRepository.save(new User("Giorgio", "Gallina", "ADMIN"));
+         userRepository.save(new User("Giorgio", "Giorgio", "ADMIN"));
+         userRepository.save(new User("Francesco", "Francesco", "ADMIN"));
      }
 
     public boolean userDoesNotExist(String username) {

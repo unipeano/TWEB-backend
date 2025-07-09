@@ -38,34 +38,94 @@ public class RecipeService {
 
     @PostConstruct
     public void init() {
-        Recipe r1 = new Recipe("Spaghetti al Pomodoro", "A classic Italian pasta dish with tomato sauce", "1.png", "Cook pasta, make sauce, combine.", 10, 4, "Mattia");
-        //Recipe r2 = new Recipe("Pasta al Pesto", "A simple pasta dish with pesto sauce", "2.png", "Boil pasta, make sauce, combine.", 15, "Mattia");
-        //Recipe r3 = new Recipe("Pizza Margherita", "A classic pizza with tomato, mozzarella, and basil", "3.png", "Prepare dough, add toppings, bake.", 20, "Pietro");
-        //Recipe r4 = new Recipe("Risotto alla Milanese", "A creamy risotto with saffron", "4.png", "Cook rice, add broth, stir in saffron.", 30, "Pietro");
+        Category appetizer = saveCategory("Appetizer");
+        Category mainCourse = saveCategory("Main Course");
+        Category dessert = saveCategory("Dessert");
+        Category breakfast = saveCategory("Breakfast");
 
-        this.saveRecipe(r1, new String[]{"Tomato", "Spaghetti", "Basil", "Olive Oil", "Salt", "Garlic"},
-                new String[]{"800g", "320g", "a.d.", "30g", "a.d.", "1 clove"});
+        Ingredient tomato = saveIngredient("Tomato");
+        Ingredient spaghetti = saveIngredient("Spaghetti");
+        Ingredient basil = saveIngredient("Basil");
+        Ingredient oliveOil = saveIngredient("Olive Oil");
+        Ingredient salt = saveIngredient("Salt");
+        Ingredient garlic = saveIngredient("Garlic");
+        Ingredient sugar = saveIngredient("Sugar");
+        Ingredient flour = saveIngredient("Flour");
+        Ingredient egg = saveIngredient("Egg");
+        Ingredient cheese = saveIngredient("Cheese");
+        Ingredient pasta = saveIngredient("Pasta");
+        Ingredient chicken = saveIngredient("Chicken");
+        Ingredient lettuce = saveIngredient("Lettuce");
+        Ingredient bread = saveIngredient("Bread");
+        Ingredient bacon = saveIngredient("Bacon");
 
-        Category c1 = new Category("Appetizer");
-        Category c2 = new Category("Main Course");
-        Category c3 = new Category("Dessert");
-        this.categoryRepository.save(c1);
-        this.categoryRepository.save(c2);
-        this.categoryRepository.save(c3);
-        this.recipeCategoryRepository.save(new RecipeCategory(r1.getId(), c2.getId()));
+        Recipe spaghettiTomato = saveRecipe("Spaghetti al Pomodoro", "A classic Italian pasta dish with tomato sauce", "1.png", "Cook pasta, make sauce, combine.", 10, 4, "Mattia");
+        saveRecipeCategory(spaghettiTomato.getId(), mainCourse.getId());
+        saveRecipeIngredient(spaghettiTomato.getId(), tomato.getId(), "800g");
+        saveRecipeIngredient(spaghettiTomato.getId(), spaghetti.getId(), "320g");
+        saveRecipeIngredient(spaghettiTomato.getId(), basil.getId(), "a.d.");
+        saveRecipeIngredient(spaghettiTomato.getId(), oliveOil.getId(), "30g");
+        saveRecipeIngredient(spaghettiTomato.getId(), salt.getId(), "a.d.");
+        saveRecipeIngredient(spaghettiTomato.getId(), garlic.getId(), "1 clove");
 
+        Recipe cake = saveRecipe("Chocolate Cake", "Rich dark chocolate cake", "2.png",
+                "Mix ingredients and bake.", 45, 8, "Pietro");
+        saveRecipeCategory(cake.getId(), dessert.getId());
+        saveRecipeIngredient(cake.getId(), sugar.getId(), "100g");
+        saveRecipeIngredient(cake.getId(), flour.getId(), "200g");
+        saveRecipeIngredient(cake.getId(), egg.getId(), "3");
+
+        Recipe salad = saveRecipe("Caesar Salad", "Fresh salad with chicken and dressing", "3.png",
+                "Toss ingredients and serve.", 20, 2, "Andrea");
+        saveRecipeCategory(salad.getId(), appetizer.getId());
+        saveRecipeIngredient(salad.getId(), lettuce.getId(), "100g");
+        saveRecipeIngredient(salad.getId(), chicken.getId(), "150g");
+        saveRecipeIngredient(salad.getId(), cheese.getId(), "30g");
+
+        Recipe pancakes = saveRecipe("Pancakes", "Fluffy morning pancakes", "4.png",
+                "Mix and fry batter.", 25, 3, "Antonio");
+        saveRecipeCategory(pancakes.getId(), breakfast.getId());
+        saveRecipeCategory(pancakes.getId(), dessert.getId());
+        saveRecipeIngredient(pancakes.getId(), flour.getId(), "150g");
+        saveRecipeIngredient(pancakes.getId(), egg.getId(), "2");
+        saveRecipeIngredient(pancakes.getId(), sugar.getId(), "50g");
+
+        Recipe omelette = saveRecipe("Omelette", "Quick and easy egg dish", "5.png",
+                "Beat eggs and cook in pan.", 10, 1, "Paola");
+        saveRecipeCategory(omelette.getId(), breakfast.getId());
+        saveRecipeIngredient(omelette.getId(), egg.getId(), "3");
+        saveRecipeIngredient(omelette.getId(), cheese.getId(), "40g");
+
+        Recipe blt = saveRecipe("BLT Sandwich", "Bacon, Lettuce, Tomato sandwich", "6.png",
+                "Assemble ingredients on toasted bread.", 10, 1, "Elena");
+        saveRecipeCategory(blt.getId(), mainCourse.getId());
+        saveRecipeCategory(blt.getId(), appetizer.getId());
+        saveRecipeIngredient(blt.getId(), bacon.getId(), "3 slices");
+        saveRecipeIngredient(blt.getId(), lettuce.getId(), "20g");
+        saveRecipeIngredient(blt.getId(), tomato.getId(), "2 slices");
+        saveRecipeIngredient(blt.getId(), bread.getId(), "2 slices");
 
     }
 
-    private void saveRecipe(Recipe recipe, String[] ingredients, String[] quantities) {
-        this.recipeRepository.save(recipe);
-        for (int i = 0; i < ingredients.length; i++) {
-            int finalI = i;
-            Ingredient ingredient = this.ingredientRepository.findByName(ingredients[i])
-                    .orElseGet(() -> this.ingredientRepository.save(new Ingredient(ingredients[finalI])));
-            this.recipeIngredientRepository.save(new RecipeIngredient(recipe.getId(), ingredient.getId(), quantities[i]));
-        }
+    private Category saveCategory(String name) {
+        return categoryRepository.save(new Category(name));
+    }
 
+    private Ingredient saveIngredient(String name) {
+        return ingredientRepository.save(new Ingredient(name));
+    }
+
+    private Recipe saveRecipe(String title, String description, String image, String instructions,
+                              Integer prepTime, Integer servings, String author) {
+        return recipeRepository.save(new Recipe(title, description, image, instructions, prepTime, servings, author));
+    }
+
+    private void saveRecipeCategory(Integer recipeId, Integer categoryId) {
+        recipeCategoryRepository.save(new RecipeCategory(recipeId, categoryId));
+    }
+
+    private void saveRecipeIngredient(Integer recipeId, Integer ingredientId, String quantity) {
+        recipeIngredientRepository.save(new RecipeIngredient(recipeId, ingredientId, quantity));
     }
 
     @Transactional

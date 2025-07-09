@@ -29,7 +29,18 @@ public class RecipeBookService {
         this.createRecipeBook("My recipes", "Mattia");
         this.createRecipeBook("Favorites", "Mattia");
         this.createRecipeBook("My recipes", "Pietro");
+        this.createRecipeBook("My recipes", "Andrea");
+        this.createRecipeBook("My recipes", "Antonio");
+        this.createRecipeBook("My recipes", "Elena");
+        this.createRecipeBook("My recipes", "Paola");
+        this.createRecipeBook("My recipes", "Alessandro");
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(1, 1));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(3, 2));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(4, 3));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(5, 4));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(7, 5));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(6, 6));
+
     }
 
     public RecipeBook createRecipeBook(String name, String recipeBookOwner) {
@@ -90,5 +101,9 @@ public class RecipeBookService {
 
     public boolean recipeExists(Integer id) {
         return this.recipeRepository.existsById(id);
+    }
+
+    public List<RecipeBook> getAllRecipeBooks() {
+        return this.recipeBookRepository.findAll();
     }
 }

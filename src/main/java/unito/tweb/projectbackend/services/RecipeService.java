@@ -34,12 +34,13 @@ public class RecipeService {
 
     @PostConstruct
     public void init() {
-        Category appetizer = saveCategory("Appetizer");
-        Category mainCourse = saveCategory("Main Course");
-        Category dessert = saveCategory("Dessert");
         Category breakfast = saveCategory("Breakfast");
+        Category mainCourse = saveCategory("Main Course");
+        Category appetizer = saveCategory("Appetizer");
+        Category dessert = saveCategory("Dessert");
 
         Ingredient tomato = saveIngredient("Tomato");
+        Ingredient tomatoSauce = saveIngredient("Tomato sauce");
         Ingredient spaghetti = saveIngredient("Spaghetti");
         Ingredient basil = saveIngredient("Basil");
         Ingredient oliveOil = saveIngredient("Olive Oil");
@@ -55,9 +56,9 @@ public class RecipeService {
         Ingredient bread = saveIngredient("Bread");
         Ingredient bacon = saveIngredient("Bacon");
 
-        Recipe spaghettiTomato = saveRecipe("Spaghetti al Pomodoro", "A classic Italian pasta dish with tomato sauce", "1.png", "Cook pasta, make sauce, combine.", 10, 4, "Mattia");
+        Recipe spaghettiTomato = saveRecipe("Spaghetti with tomato sauce", "A classic Italian pasta dish with tomato sauce", "1.png", "Cook pasta, make sauce, combine.", 10, 4, "Mattia");
         saveRecipeCategory(spaghettiTomato.getId(), mainCourse.getId());
-        saveRecipeIngredient(spaghettiTomato.getId(), tomato.getId(), "800g");
+        saveRecipeIngredient(spaghettiTomato.getId(), tomatoSauce.getId(), "800g");
         saveRecipeIngredient(spaghettiTomato.getId(), spaghetti.getId(), "320g");
         saveRecipeIngredient(spaghettiTomato.getId(), basil.getId(), "a.d.");
         saveRecipeIngredient(spaghettiTomato.getId(), oliveOil.getId(), "30g");
@@ -159,12 +160,9 @@ public class RecipeService {
         });
     }
 
-    private void saveCategoriesToRecipe(Integer recipeId, List<String> categories) {
-        categories.forEach(category -> {
-            Category cat = categoryRepository.findByName(category)
-                    .orElseGet(() -> categoryRepository.save(new Category(category)));
-            recipeCategoryRepository.save(new RecipeCategory(recipeId, cat.getId()));
-        });
+    // client fetcha le categories
+    private void saveCategoriesToRecipe(Integer recipeId, List<Category> categories) {
+        categories.forEach(category -> recipeCategoryRepository.save(new RecipeCategory(recipeId, category.getId())));
     }
 
 
@@ -200,16 +198,12 @@ public class RecipeService {
         this.recipeRepository.deleteById(id);
     }
 
-    public List<String> getCategories() {
-        return this.categoryRepository.findAll().stream()
-                .map(Category::getName)
-                .toList();
+    public List<Category> getCategories() {
+        return this.categoryRepository.findAll();
     }
 
-    public List<String> getIngredients() {
-        return this.ingredientRepository.findAll().stream()
-                .map(Ingredient::getName)
-                .toList();
+    public List<Ingredient> getIngredients() {
+        return this.ingredientRepository.findAll();
     }
 
     public List<Recipe> searchRecipeByCategory(String category) {
@@ -240,12 +234,11 @@ public class RecipeService {
         // se non trova l'ingrediente lo ignora (no exception)
     }
 
-    public List<String> getCategoriesByRecipeId(Integer id) {
+    public List<Category> getCategoriesByRecipeId(Integer id) {
         return this.recipeCategoryRepository.findByRecipeId(id).stream()
                 .map(rc -> this.categoryRepository.findById(rc.getCategoryId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(Category::getName)
                 .toList();
         // se non trova la categoria la ignora (no exception)
     }

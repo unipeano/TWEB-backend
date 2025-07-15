@@ -1,5 +1,6 @@
 package unito.tweb.projectbackend.dto;
 
+import unito.tweb.projectbackend.persistence.Category;
 import unito.tweb.projectbackend.persistence.Recipe;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class RecipeDTO {
     private Integer servings;
     private String author;
     private List<IngredientDTO> ingredients;
-    private List<String> categories;
+    private List<Category> categories;
 
     public RecipeDTO(Recipe recipe) {
         this.id = recipe.getId();
@@ -103,11 +104,11 @@ public class RecipeDTO {
         this.ingredients = ingredients;
     }
 
-    public List<String> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

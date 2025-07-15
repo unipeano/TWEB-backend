@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unito.tweb.projectbackend.dto.RecipeDTO;
+import unito.tweb.projectbackend.persistence.Category;
+import unito.tweb.projectbackend.persistence.Ingredient;
 import unito.tweb.projectbackend.persistence.Recipe;
 import unito.tweb.projectbackend.persistence.User;
 import unito.tweb.projectbackend.services.RecipeService;
@@ -92,12 +94,12 @@ public class RecipeController {
 
 
     @GetMapping("/recipes/categories")
-    public ResponseEntity<List<String>> categories() {
+    public ResponseEntity<List<Category>> categories() {
         return ResponseEntity.ok(recipeService.getCategories());
     }
 
     @GetMapping("/recipes/ingredients")
-    public ResponseEntity<List<String>> ingredients() {
+    public ResponseEntity<List<Ingredient>> ingredients() {
         return ResponseEntity.ok(recipeService.getIngredients());
     }
 

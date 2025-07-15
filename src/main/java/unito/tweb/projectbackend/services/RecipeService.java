@@ -102,6 +102,24 @@ public class RecipeService {
         saveRecipeIngredient(blt.getId(), tomato.getId(), "2 slices");
         saveRecipeIngredient(blt.getId(), bread.getId(), "2 slices");
 
+        Recipe lampredotto = saveRecipe("Lampredotto", "Traditional Florentine sandwich made with cow's stomach", "7.png",
+                "Boil lampredotto, season, and serve in bread roll.", 60, 1, "Elena");
+        saveRecipeCategory(lampredotto.getId(), mainCourse.getId());
+        saveRecipeCategory(lampredotto.getId(), appetizer.getId());
+        saveRecipeIngredient(lampredotto.getId(), bread.getId(), "1 roll");
+        saveRecipeIngredient(lampredotto.getId(), salt.getId(), "a.d.");
+        saveRecipeIngredient(lampredotto.getId(), oliveOil.getId(), "10g");
+
+        Recipe muffins = saveRecipe("Muffins", "Soft and sweet baked breakfast treat", "8.png",
+                "Mix ingredients, pour into molds, and bake.", 30, 6, "Paola");
+        saveRecipeCategory(muffins.getId(), breakfast.getId());
+        saveRecipeCategory(muffins.getId(), dessert.getId());
+        saveRecipeIngredient(muffins.getId(), flour.getId(), "200g");
+        saveRecipeIngredient(muffins.getId(), egg.getId(), "2");
+        saveRecipeIngredient(muffins.getId(), sugar.getId(), "80g");
+        saveRecipeIngredient(muffins.getId(), oliveOil.getId(), "50g");
+
+
     }
 
     private Category saveCategory(String name) {

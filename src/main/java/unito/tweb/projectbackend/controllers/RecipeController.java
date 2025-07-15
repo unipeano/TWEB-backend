@@ -41,14 +41,7 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes")
-    public ResponseEntity<List<Recipe>> recipes(@RequestParam(required = false) String author,
-                                            @RequestParam(required = false) String title) {
-        if (author != null && title != null) {
-            return ResponseEntity.ok(recipeService.searchRecipeByAuthorTitle(author, title));
-        }
-        if (author != null) {
-            return ResponseEntity.ok(recipeService.searchRecipeByAuthor(author));
-        }
+    public ResponseEntity<List<Recipe>> recipes(@RequestParam(required = false) String title) {
         if (title != null) {
             return ResponseEntity.ok(recipeService.searchRecipeByTitle(title));
         }

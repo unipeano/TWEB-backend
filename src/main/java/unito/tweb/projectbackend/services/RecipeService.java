@@ -245,7 +245,7 @@ public class RecipeService {
     public List<IngredientDTO> getIngredientsByRecipeId(Integer id) {
         return this.recipeIngredientRepository.findByRecipeId(id).stream()
                 .map(ri -> this.ingredientRepository.findById(ri.getIngredientId())
-                        .map(ingredient -> new IngredientDTO(ingredient.getName(), ri.getQuantity())))
+                        .map(ingredient -> new IngredientDTO(ingredient.getId(), ingredient.getName(), ri.getQuantity())))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
@@ -259,5 +259,26 @@ public class RecipeService {
                 .map(Optional::get)
                 .toList();
         // se non trova la categoria la ignora (no exception)
+    }
+
+    public RecipeDTO convertToDTO(Recipe recipe) {
+        RecipeDTO dto = new RecipeDTO(recipe);
+        dto.setIngredients(getIngredientsByRecipeId(recipe.getId()));
+        dto.setCategories(getCategoriesByRecipeId(recipe.getId()));
+        return dto;
+    }
+
+    public List<RecipeDTO> getAllRecipeDTOs(String title) {
+        List<Recipe> recipes = title == null || title.isEmpty() ? getAllRecipes() : searchRecipeByTitle(title);
+        return recipes.stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public List<RecipeDTO> getDTOsByCategory(String category) {
+        List<Recipe> recipes = searchRecipeByCategory(category);
+        return recipes.stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 }

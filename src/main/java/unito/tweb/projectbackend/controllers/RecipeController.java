@@ -31,21 +31,15 @@ public class RecipeController {
     public ResponseEntity<RecipeDTO> recipeById(@PathVariable Integer id) {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
         if (recipe.isPresent()) {
-            RecipeDTO recipeDTO = new RecipeDTO(recipe.get());
-            recipeDTO.setIngredients(recipeService.getIngredientsByRecipeId(id));
-            recipeDTO.setCategories(recipeService.getCategoriesByRecipeId(id));
-            return ResponseEntity.ok(recipeDTO);
+            return ResponseEntity.ok(recipeService.convertToDTO(recipe.get()));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/recipes")
-    public ResponseEntity<List<Recipe>> recipes(@RequestParam(required = false) String title) {
-        if (title != null) {
-            return ResponseEntity.ok(recipeService.searchRecipeByTitle(title));
-        }
-        return ResponseEntity.ok(recipeService.getAllRecipes());
+    public ResponseEntity<List<RecipeDTO>> recipes(@RequestParam(required = false) String title) {
+        return ResponseEntity.ok(recipeService.getAllRecipeDTOs(title));
     }
 
     // ricordarsi degli ID (server)
@@ -98,11 +92,11 @@ public class RecipeController {
 
 
     @GetMapping("/recipes/category/{category}")
-    public ResponseEntity<List<Recipe>> recipesByCategory(@PathVariable String category) {
+    public ResponseEntity<List<RecipeDTO>> recipesByCategory(@PathVariable String category) {
         String decodedCategory = category.replace("-", " ");
         if (!recipeService.categoryExists(decodedCategory)) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(recipeService.searchRecipeByCategory(decodedCategory));
+        return ResponseEntity.ok(recipeService.getDTOsByCategory(decodedCategory));
     }
 }

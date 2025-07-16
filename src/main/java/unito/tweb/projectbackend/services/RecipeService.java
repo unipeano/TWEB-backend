@@ -261,24 +261,46 @@ public class RecipeService {
         // se non trova la categoria la ignora (no exception)
     }
 
-    public RecipeDTO convertToDTO(Recipe recipe) {
+    private RecipeDTO convertToDTO(Recipe recipe) {
         RecipeDTO dto = new RecipeDTO(recipe);
         dto.setIngredients(getIngredientsByRecipeId(recipe.getId()));
         dto.setCategories(getCategoriesByRecipeId(recipe.getId()));
         return dto;
     }
 
-    public List<RecipeDTO> getAllRecipeDTOs(String title) {
-        List<Recipe> recipes = title == null || title.isEmpty() ? getAllRecipes() : searchRecipeByTitle(title);
+    private List<RecipeDTO> convertRecipes(List<Recipe> recipes) {
         return recipes.stream()
                 .map(this::convertToDTO)
                 .toList();
     }
 
+    public List<RecipeDTO> getAllRecipeDTOs() {
+        List<Recipe> recipes = getAllRecipes();
+        return convertRecipes(recipes);
+    }
+
+    public List<RecipeDTO> getRecipesByTitle(String title) {
+        List<Recipe> recipes = searchRecipeByTitle(title);
+        return convertRecipes(recipes);
+    }
+
+    public List<RecipeDTO> getRecipesByAuthor(String author) {
+        List<Recipe> recipes = searchRecipeByAuthor(author);
+        return convertRecipes(recipes);
+    }
+
+    public List<RecipeDTO> getRecipesByAuthorAndTitle(String author, String title) {
+        List<Recipe> recipes = searchRecipeByAuthorTitle(author, title);
+        return convertRecipes(recipes);
+    }
     public List<RecipeDTO> getDTOsByCategory(String category) {
         List<Recipe> recipes = searchRecipeByCategory(category);
         return recipes.stream()
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public RecipeDTO getRecipeDTO(Recipe recipe) {
+        return convertToDTO(recipe);
     }
 }

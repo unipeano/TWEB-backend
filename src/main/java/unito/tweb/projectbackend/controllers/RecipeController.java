@@ -31,18 +31,28 @@ public class RecipeController {
     public ResponseEntity<RecipeDTO> recipeById(@PathVariable Integer id) {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
         if (recipe.isPresent()) {
-            return ResponseEntity.ok(recipeService.convertToDTO(recipe.get()));
+            return ResponseEntity.ok(recipeService.getRecipeDTO(recipe.get()));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/recipes")
-    public ResponseEntity<List<RecipeDTO>> recipes(@RequestParam(required = false) String title) {
-        return ResponseEntity.ok(recipeService.getAllRecipeDTOs(title));
+    public ResponseEntity<List<RecipeDTO>> recipes(@RequestParam(required = false) String author,
+                                                   @RequestParam(required = false) String title) {
+        if (title != null && author != null) {
+            return ResponseEntity.ok(recipeService.getRecipesByAuthorAndTitle(author, title));
+        }
+        else if (title != null) {
+            return ResponseEntity.ok(recipeService.getRecipesByTitle(title));
+        }
+        else if (author != null) {
+            return ResponseEntity.ok(recipeService.getRecipesByAuthor(author));
+        }
+        return ResponseEntity.ok(recipeService.getAllRecipeDTOs());
     }
 
-    // ricordarsi degli ID (server)
+    // ricordarsi degli ID (server), quale è il più adatto da restituire? DTO?
     @PostMapping("/recipes")
     public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe, HttpSession session) {
         String username = (String) session.getAttribute("username");

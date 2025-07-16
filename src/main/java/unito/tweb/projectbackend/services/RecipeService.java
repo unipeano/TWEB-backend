@@ -56,7 +56,8 @@ public class RecipeService {
         Ingredient bread = saveIngredient("Bread");
         Ingredient bacon = saveIngredient("Bacon");
 
-        Recipe spaghettiTomato = saveRecipe("Spaghetti with tomato sauce", "A classic Italian pasta dish with tomato sauce", "1.png", "Cook pasta, make sauce, combine.", 10, 4, "Mattia");
+        Recipe spaghettiTomato = saveRecipe("Spaghetti with tomato sauce", "A classic Italian pasta dish with tomato sauce", "1.png",
+                "Boil pasta, Prepare sauce, Combine all", 10, 4, "Mattia");
         saveRecipeCategory(spaghettiTomato.getId(), mainCourse.getId());
         saveRecipeIngredient(spaghettiTomato.getId(), tomatoSauce.getId(), "800g");
         saveRecipeIngredient(spaghettiTomato.getId(), spaghetti.getId(), "320g");
@@ -66,21 +67,21 @@ public class RecipeService {
         saveRecipeIngredient(spaghettiTomato.getId(), garlic.getId(), "1 clove");
 
         Recipe cake = saveRecipe("Chocolate Cake", "Rich dark chocolate cake", "2.png",
-                "Mix ingredients and bake.", 45, 8, "Pietro");
+                "Mix ingredients, Pour batter, Bake cake", 45, 8, "Pietro");
         saveRecipeCategory(cake.getId(), dessert.getId());
         saveRecipeIngredient(cake.getId(), sugar.getId(), "100g");
         saveRecipeIngredient(cake.getId(), flour.getId(), "200g");
         saveRecipeIngredient(cake.getId(), egg.getId(), "3");
 
         Recipe salad = saveRecipe("Caesar Salad", "Fresh salad with chicken and dressing", "3.png",
-                "Toss ingredients and serve.", 20, 2, "Andrea");
+                "Grill chicken, Toss lettuce, Add cheese", 20, 2, "Andrea");
         saveRecipeCategory(salad.getId(), appetizer.getId());
         saveRecipeIngredient(salad.getId(), lettuce.getId(), "100g");
         saveRecipeIngredient(salad.getId(), chicken.getId(), "150g");
         saveRecipeIngredient(salad.getId(), cheese.getId(), "30g");
 
         Recipe pancakes = saveRecipe("Pancakes", "Fluffy morning pancakes", "4.png",
-                "Mix and fry batter.", 25, 3, "Antonio");
+                "Mix batter, Heat pan, Fry pancakes", 25, 3, "Antonio");
         saveRecipeCategory(pancakes.getId(), breakfast.getId());
         saveRecipeCategory(pancakes.getId(), dessert.getId());
         saveRecipeIngredient(pancakes.getId(), flour.getId(), "150g");
@@ -88,13 +89,13 @@ public class RecipeService {
         saveRecipeIngredient(pancakes.getId(), sugar.getId(), "50g");
 
         Recipe omelette = saveRecipe("Omelette", "Quick and easy egg dish", "5.png",
-                "Beat eggs and cook in pan.", 10, 1, "Paola");
+                "Beat eggs, Add cheese, Cook omelette", 10, 1, "Paola");
         saveRecipeCategory(omelette.getId(), breakfast.getId());
         saveRecipeIngredient(omelette.getId(), egg.getId(), "3");
         saveRecipeIngredient(omelette.getId(), cheese.getId(), "40g");
 
         Recipe blt = saveRecipe("BLT Sandwich", "Bacon, Lettuce, Tomato sandwich", "6.png",
-                "Assemble ingredients on toasted bread.", 10, 1, "Elena");
+                "Toast bread, Cook bacon, Assemble sandwich", 10, 1, "Elena");
         saveRecipeCategory(blt.getId(), mainCourse.getId());
         saveRecipeCategory(blt.getId(), appetizer.getId());
         saveRecipeIngredient(blt.getId(), bacon.getId(), "3 slices");
@@ -103,7 +104,7 @@ public class RecipeService {
         saveRecipeIngredient(blt.getId(), bread.getId(), "2 slices");
 
         Recipe lampredotto = saveRecipe("Lampredotto", "Traditional Florentine sandwich made with cow's stomach", "7.png",
-                "Boil lampredotto, season, and serve in bread roll.", 60, 1, "Elena");
+                "Boil lampredotto, Season well, Fill bread", 60, 1, "Elena");
         saveRecipeCategory(lampredotto.getId(), mainCourse.getId());
         saveRecipeCategory(lampredotto.getId(), appetizer.getId());
         saveRecipeIngredient(lampredotto.getId(), bread.getId(), "1 roll");
@@ -111,7 +112,7 @@ public class RecipeService {
         saveRecipeIngredient(lampredotto.getId(), oliveOil.getId(), "10g");
 
         Recipe muffins = saveRecipe("Muffins", "Soft and sweet baked breakfast treat", "8.png",
-                "Mix ingredients, pour into molds, and bake.", 30, 6, "Paola");
+                "Mix ingredients, Fill molds, Bake muffins", 30, 6, "Paola");
         saveRecipeCategory(muffins.getId(), breakfast.getId());
         saveRecipeCategory(muffins.getId(), dessert.getId());
         saveRecipeIngredient(muffins.getId(), flour.getId(), "200g");

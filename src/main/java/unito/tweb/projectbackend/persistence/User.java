@@ -20,8 +20,25 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "image")
+    private String image;
+
+
     public User() {}
 
+    // per chef e user
+    public User(String username, String password, String role, String description, String image) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.description = description;
+        this.image = image;
+    }
+
+    // per admin
     public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
@@ -58,6 +75,14 @@ public class User {
 
     public void setChefRole(){
         this.role = "CHEF";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImage() {
+        return image;
     }
 
 }

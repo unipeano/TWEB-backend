@@ -145,7 +145,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public Recipe addRecipe(RecipeDTO request) {
+    public RecipeDTO addRecipe(RecipeDTO request) {
         if(!this.searchRecipeByAuthorTitle(request.getAuthor(), request.getTitle()).isEmpty()) {
             throw new IllegalArgumentException("A recipe with the same title by the same author already exists.");
         }
@@ -153,7 +153,7 @@ public class RecipeService {
         recipeBookService.addRecipeToDefaultRecipeBook(request.getAuthor(), recipe.getId());
         saveIngredientsToRecipe(recipe.getId(), request.getIngredients());
         saveCategoriesToRecipe(recipe.getId(), request.getCategories());
-        return recipe;
+        return convertToDTO(recipe);
     }
 
     private Recipe saveBasicRecipe(RecipeDTO request) {
@@ -170,13 +170,7 @@ public class RecipeService {
     }
 
     private void saveIngredientsToRecipe(Integer recipeId, List<IngredientDTO> ingredients) {
-        ingredients.forEach(ingredient -> {
-            Ingredient ing = ingredientRepository.findByName(ingredient.getName())
-                    .orElseGet(() -> ingredientRepository.save(new Ingredient(ingredient.getName())));
-            // probabilmente non serve il check su null, ma lo metto per sicurezza
-            // (il client non dovrebbe inventarsi ingredienti)
-            recipeIngredientRepository.save(new RecipeIngredient(recipeId, ing.getId(), ingredient.getQuantity()));
-        });
+        ingredients.forEach(ingredient -> recipeIngredientRepository.save(new RecipeIngredient(recipeId, ingredient.getId(), ingredient.getQuantity())));
     }
 
     // client fetcha le categories

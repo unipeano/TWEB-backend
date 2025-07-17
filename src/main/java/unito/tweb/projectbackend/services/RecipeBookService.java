@@ -29,11 +29,17 @@ public class RecipeBookService {
         this.createRecipeBook("My recipes", "Mattia");
         this.createRecipeBook("Favorites", "Mattia");
         this.createRecipeBook("My recipes", "Pietro");
+        this.createRecipeBook("Favorites", "Pietro");
         this.createRecipeBook("My recipes", "Andrea");
+        this.createRecipeBook("Favorites", "Andrea");
         this.createRecipeBook("My recipes", "Antonio");
+        this.createRecipeBook("Favorites", "Antonio");
         this.createRecipeBook("My recipes", "Elena");
+        this.createRecipeBook("Favorites", "Elena");
         this.createRecipeBook("My recipes", "Paola");
+        this.createRecipeBook("Favorites", "Paola");
         this.createRecipeBook("My recipes", "Alessandro");
+        this.createRecipeBook("Favorites", "Alessandro");
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(1, 1));
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(3, 2));
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(4, 3));

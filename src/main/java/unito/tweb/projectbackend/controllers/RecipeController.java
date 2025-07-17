@@ -52,16 +52,15 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getAllRecipeDTOs());
     }
 
-    // ricordarsi degli ID (server), quale è il più adatto da restituire? DTO?
     @PostMapping("/recipes")
-    public ResponseEntity<Recipe> createRecipe(@RequestBody RecipeDTO recipe, HttpSession session) {
+    public ResponseEntity<List<RecipeDTO>> createRecipe(@RequestBody RecipeDTO recipe, HttpSession session) {
         String username = (String) session.getAttribute("username");
         if (!recipe.getAuthor().equals(username)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try {
-            Recipe newRecipe = recipeService.addRecipe(recipe);
-            return ResponseEntity.ok(newRecipe); // posso anche restituire solo l'id da aggiornare?
+            recipeService.addRecipe(recipe);
+            return ResponseEntity.ok(recipeService.getAllRecipeDTOs());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

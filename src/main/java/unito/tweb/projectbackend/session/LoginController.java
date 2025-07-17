@@ -3,6 +3,7 @@ package unito.tweb.projectbackend.session;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unito.tweb.projectbackend.dto.UserDTO;
 import unito.tweb.projectbackend.persistence.User;
 import unito.tweb.projectbackend.services.UserService;
 
@@ -26,21 +27,18 @@ public class LoginController {
         String existingUser = (String) session.getAttribute("username");
         if (username == null || password == null) {
             if (existingUser == null) {
-                return ResponseEntity.ok(new SessionData("", null,
-                        null, null,
+                return ResponseEntity.ok(new SessionData(null,
                         "User not authenticated."));
             }
             Optional<User> userOpt = userService.getUserByUsername(existingUser);
             if (userOpt.isEmpty()) {
                 session.invalidate();
-                return ResponseEntity.status(404).body(new SessionData("", null, null, null,
+                return ResponseEntity.status(404).body(new SessionData( null,
                         "User not found in the database."));
             }
             User user = userOpt.get();
-            return ResponseEntity.ok(new SessionData(existingUser,
-                    user.getRole(),
-                    user.getDescription(),
-                    user.getImage(),
+            return ResponseEntity.ok(new SessionData(new UserDTO(existingUser, user.getRole(), user.getDescription(),
+                    user.getImage()),
                     "User authenticated."));
         }
         if (existingUser != null) {
@@ -48,18 +46,15 @@ public class LoginController {
                 Optional<User> userOpt = userService.getUserByUsername(existingUser);
                 if(userOpt.isEmpty()) {
                     session.invalidate();
-                    return ResponseEntity.status(404).body(new SessionData("", null, null, null,
+                    return ResponseEntity.status(404).body(new SessionData( null,
                             "User not found in the database."));
                 }
                 User user = userOpt.get();
-                return ResponseEntity.ok(new SessionData(username,
-                        user.getRole(),
-                        user.getDescription(),
-                        user.getImage(),
+                return ResponseEntity.ok(new SessionData(new UserDTO(username, user.getRole(), user.getDescription(),
+                        user.getImage()),
                         "User already authenticated."));
             }
-            return ResponseEntity.badRequest().body(new SessionData("",
-                    null, null, null,
+            return ResponseEntity.badRequest().body(new SessionData( null,
                     "Another user authenticated."));
         }
         boolean auth = userService.checkCredentials(username, password);
@@ -67,22 +62,20 @@ public class LoginController {
             Optional<User> userOpt = userService.getUserByUsername(username);
 
             if(userOpt.isEmpty()){
-                return ResponseEntity.status(404).body(new SessionData("", null, null, null,
+                return ResponseEntity.status(404).body(new SessionData( null,
                         "User not found in the database."));
             }
             User user = userOpt.get();
             session.setAttribute("username", username);
             session.setAttribute("role", user.getRole());
             return ResponseEntity.ok(new SessionData(
-                    username,
-                    user.getRole(),
-                    user.getDescription(),
-                    user.getImage(),
+                    new UserDTO(username, user.getRole(), user.getDescription(),
+                            user.getImage()),
                     "Log in successful."
             ));
         }
         return ResponseEntity.status(401).body(
-                new SessionData("", null, null, null,
+                new SessionData(null,
                         "Invalid credentials."));
     }
 
@@ -90,11 +83,11 @@ public class LoginController {
     public ResponseEntity<SessionData> invalidate(HttpSession session) {
         String existingUser = (String) session.getAttribute("username");
         if (existingUser == null) {
-            return ResponseEntity.ok(new SessionData("", null, null, null,
+            return ResponseEntity.ok(new SessionData( null,
                     "No user to log out."));
         }
         session.invalidate();
-        return ResponseEntity.ok(new SessionData("", null, null, null,
+        return ResponseEntity.ok(new SessionData(null,
                 "User successfully logged out."));
     }
 }

@@ -2,9 +2,11 @@ package unito.tweb.projectbackend.services;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import unito.tweb.projectbackend.dto.UserDTO;
 import unito.tweb.projectbackend.persistence.User;
 import unito.tweb.projectbackend.persistence.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,5 +39,16 @@ public class UserService {
 
     public Optional<User> getUserByUsername(String username) {
         return this.userRepository.findById(username);
+    }
+
+    public List<UserDTO> getAllUsers() {
+        List<User> users = this.userRepository.findAllByRoleNot("ADMIN");
+        return users.stream()
+                .map(user -> new UserDTO(user.getUsername(), user.getRole(), user.getDescription(), user.getImage()))
+                .toList();
+    }
+
+    public UserDTO getUserDTO(User user) {
+        return new UserDTO(user.getUsername(), user.getRole(), user.getDescription(), user.getImage());
     }
 }

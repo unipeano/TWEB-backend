@@ -77,13 +77,14 @@ public class RecipeBookController {
     }
 
 
-
-    @GetMapping("/users/{username}/recipebooks/{recipeBookId}/recipes")
-    public ResponseEntity<List<Recipe>> getRecipesInRecipeBook(@PathVariable String username, @PathVariable Integer recipeBookId) {
-        if (!recipeBookService.isRecipeBookOwner(recipeBookId, username)) {
+    // forse restituire DTO?
+    @GetMapping("/users/{username}/recipebooks/{recipeBookName}/recipes")
+    public ResponseEntity<List<Recipe>> getRecipesInRecipeBook(@PathVariable String username, @PathVariable String recipeBookName) {
+        Optional<RecipeBook> recipeBook = recipeBookService.findRecipeBookByNameAndOwner(recipeBookName, username);
+        if (recipeBook.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        List<Recipe> recipes = recipeBookService.getRecipesInRecipeBook(recipeBookId);
+        List<Recipe> recipes = recipeBookService.getRecipesInRecipeBook(recipeBook.get().getId());
         return ResponseEntity.ok(recipes);
     }
 

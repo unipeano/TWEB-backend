@@ -112,4 +112,7 @@ public class RecipeBookService {
     public List<RecipeBook> getAllRecipeBooks() {
         return this.recipeBookRepository.findAll();
     }
+    public Optional<RecipeBook> findRecipeBookByNameAndOwner(String recipeBookName, String username) {
+        return this.recipeBookRepository.findByNameAndRecipeBookOwner(recipeBookName, username);
+    }
 }

@@ -18,13 +18,13 @@ public class UserService {
 
      @PostConstruct
      public void init() {
-         userRepository.save(new User("Mattia", "Mattia", "CHEF", "Chef di cucina", "1.jpg"));
-         userRepository.save(new User("Andrea", "Andrea", "CHEF", "Chef di pasticceria", "3.jpg"));
-         userRepository.save(new User("Antonio", "Antonio", "CHEF", "Chef di ristorante", "2.jpg"));
-         userRepository.save(new User("Elena", "Elena", "CHEF", "Chef di cucina vegana", "5.jpg"));
-         userRepository.save(new User("Paola", "Paola", "USER", "Appassionata di cucina", "6.jpg"));
-         userRepository.save(new User("Alessandro", "Alessandro", "USER", "Appassionato di cucina italiana", "7.jpg"));
-         userRepository.save(new User("Pietro", "Pietro", "USER", "Appassionato di cucina asiatica", "4.jpg"));
+         userRepository.save(new User("Mattia", "Mattia", "CHEF", "Chef esperto in cucina italiana e primi piatti", "1.jpg"));
+         userRepository.save(new User("Andrea", "Andrea", "CHEF", "Chef specializzato in piatti freschi e insalate", "3.jpg"));
+         userRepository.save(new User("Antonio", "Antonio", "CHEF", "Chef con talento per la cucina internazionale e breakfast", "2.jpg"));
+         userRepository.save(new User("Elena", "Elena", "CHEF", "Chef innovativa, esperta in street food e panini", "5.jpg"));
+         userRepository.save(new User("Paola", "Paola", "USER", "Appassionata di cucina casalinga e baking", "6.jpg"));
+         userRepository.save(new User("Alessandro", "Alessandro", "USER", "Food enthusiast, in esplorazione culinaria", "7.jpg"));
+         userRepository.save(new User("Pietro", "Pietro", "USER", "Appassionato di cucina etnica e sapori orientali", "4.jpg"));
          userRepository.save(new User("Giorgio", "Giorgio", "ADMIN"));
          userRepository.save(new User("Francesco", "Francesco", "ADMIN"));
      }

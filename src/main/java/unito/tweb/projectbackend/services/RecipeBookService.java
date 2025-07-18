@@ -26,26 +26,35 @@ public class RecipeBookService {
 
     @PostConstruct
     public void init() {
-        this.createRecipeBook("My recipes", "Mattia");
-        this.createRecipeBook("Favorites", "Mattia");
-        this.createRecipeBook("My recipes", "Pietro");
-        this.createRecipeBook("Favorites", "Pietro");
-        this.createRecipeBook("My recipes", "Andrea");
-        this.createRecipeBook("Favorites", "Andrea");
-        this.createRecipeBook("My recipes", "Antonio");
-        this.createRecipeBook("Favorites", "Antonio");
-        this.createRecipeBook("My recipes", "Elena");
-        this.createRecipeBook("Favorites", "Elena");
-        this.createRecipeBook("My recipes", "Paola");
-        this.createRecipeBook("Favorites", "Paola");
-        this.createRecipeBook("My recipes", "Alessandro");
-        this.createRecipeBook("Favorites", "Alessandro");
+        this.createRecipeBook("My recipes", "Mattia");      // 1
+        this.createRecipeBook("Favorites", "Mattia");       // 2
+        this.createRecipeBook("My recipes", "Pietro");      // 3
+        this.createRecipeBook("Favorites", "Pietro");       // 4
+        this.createRecipeBook("My recipes", "Andrea");      // 5
+        this.createRecipeBook("Favorites", "Andrea");       // 6
+        this.createRecipeBook("My recipes", "Antonio");     // 7
+        this.createRecipeBook("Favorites", "Antonio");      // 8
+        this.createRecipeBook("My recipes", "Elena");       // 9
+        this.createRecipeBook("Favorites", "Elena");        // 10
+        this.createRecipeBook("My recipes", "Paola");       // 11
+        this.createRecipeBook("Favorites", "Paola");        // 12
+        this.createRecipeBook("My recipes", "Alessandro");  // 13
+        this.createRecipeBook("Favorites", "Alessandro");   // 14
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(1, 1));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(2, 8));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(2, 4));
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(3, 2));
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(4, 3));
-        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(5, 4));
-        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(7, 5));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(5, 3));
         this.recipeBookRecipeRepository.save(new RecipeBookRecipe(6, 6));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(6, 7));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(7, 4));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(8, 2));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(9, 6));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(9, 7));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(10, 1));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(11, 5));
+        this.recipeBookRecipeRepository.save(new RecipeBookRecipe(11, 8));
 
     }
 

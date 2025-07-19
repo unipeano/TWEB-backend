@@ -298,4 +298,8 @@ public class RecipeService {
     public RecipeDTO getRecipeDTO(Recipe recipe) {
         return convertToDTO(recipe);
     }
+
+    public List<RecipeDTO> getDTOs(List<Recipe> recipes) {
+        return convertRecipes(recipes);
+    }
 }

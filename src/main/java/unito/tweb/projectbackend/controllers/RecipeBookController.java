@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unito.tweb.projectbackend.dto.RecipeDTO;
 import unito.tweb.projectbackend.persistence.Recipe;
 import unito.tweb.projectbackend.persistence.RecipeBook;
 import unito.tweb.projectbackend.services.RecipeBookService;
+import unito.tweb.projectbackend.services.RecipeService;
 import unito.tweb.projectbackend.services.UserService;
 
 import java.util.List;
@@ -17,12 +19,15 @@ import java.util.Optional;
 public class RecipeBookController {
 
     RecipeBookService recipeBookService;
+    RecipeService recipeService;
     UserService userService;
 
     public RecipeBookController(RecipeBookService recipeBookService,
-                                UserService userService) {
+                                UserService userService,
+                                RecipeService recipeService) {
         this.recipeBookService = recipeBookService;
         this.userService = userService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping("/me/recipebooks")
@@ -77,15 +82,14 @@ public class RecipeBookController {
     }
 
 
-    // forse restituire DTO?
     @GetMapping("/users/{username}/recipebooks/{recipeBookName}/recipes")
-    public ResponseEntity<List<Recipe>> getRecipesInRecipeBook(@PathVariable String username, @PathVariable String recipeBookName) {
+    public ResponseEntity<List<RecipeDTO>> getRecipesInRecipeBook(@PathVariable String username, @PathVariable String recipeBookName) {
         Optional<RecipeBook> recipeBook = recipeBookService.findRecipeBookByNameAndOwner(recipeBookName, username);
         if (recipeBook.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         List<Recipe> recipes = recipeBookService.getRecipesInRecipeBook(recipeBook.get().getId());
-        return ResponseEntity.ok(recipes);
+        return ResponseEntity.ok(recipeService.getDTOs(recipes));
     }
 
 

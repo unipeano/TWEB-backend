@@ -45,4 +45,18 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserDTO(userOpt.get()));
     }
 
+    @PostMapping("/users/delete")
+    public ResponseEntity<List<UserDTO>> deleteUser(@RequestBody UserDTO user, HttpSession session) {
+        String currentUsername = (String) session.getAttribute("username");
+        Optional<User> userOpt = userService.getUserByUsername(currentUsername);
+        if (userOpt.isEmpty() || !userOpt.get().isAdmin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userService.userDoesNotExist(user.getUsername())) {
+            return ResponseEntity.notFound().build();
+        }
+        userService.deleteUser(user.getUsername());
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
 }

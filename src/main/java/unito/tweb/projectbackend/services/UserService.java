@@ -51,4 +51,8 @@ public class UserService {
     public UserDTO getUserDTO(User user) {
         return new UserDTO(user.getUsername(), user.getRole(), user.getDescription(), user.getImage());
     }
+
+    public void deleteUser(String username) {
+        userRepository.deleteById(username);
+    }
 }

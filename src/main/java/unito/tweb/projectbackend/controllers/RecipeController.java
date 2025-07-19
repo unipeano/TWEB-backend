@@ -67,25 +67,25 @@ public class RecipeController {
         }
     }
 
-    @DeleteMapping("/recipes/{id}")
-    public ResponseEntity<Void> deleteRecipe(@PathVariable Integer id, HttpSession session) {
-        Optional<Recipe> recipe = recipeService.getRecipeById(id);
+    @PostMapping("/recipes/delete")
+    public ResponseEntity<List<RecipeDTO>> deleteRecipe(@RequestBody Recipe recipe, HttpSession session) {
+        Optional<Recipe> recipeOpt = recipeService.getRecipeById(recipe.getId());
         String username = (String) session.getAttribute("username");
         Optional<User> user = userService.getUserByUsername(username);
 
-        if (recipe.isEmpty()) {
+        if (recipeOpt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         // in teoria non serve fare il check su user perchè ci pensa il filter a bloccare le richieste non autenticate
         // in caso di autenticazione invece, il logincontroller mette l'username (controllato) nella sessione
 
-        if (!recipe.get().getAuthor().equals(username) && !user.get().isAdmin()) {
+        if (!recipeOpt.get().getAuthor().equals(username) && !user.get().isAdmin()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        recipeService.deleteRecipe(id);
-        return ResponseEntity.noContent().build();
+        recipeService.deleteRecipe(recipeOpt.get().getId());
+        return ResponseEntity.ok(recipeService.getAllRecipeDTOs());
     }
 
 

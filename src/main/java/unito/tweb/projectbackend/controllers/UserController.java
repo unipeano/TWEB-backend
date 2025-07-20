@@ -59,4 +59,18 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @GetMapping("/users/{username}/role")
+    public ResponseEntity<UserDTO> changeUserRole(@PathVariable String username, HttpSession session) {
+        String currentUsername = (String) session.getAttribute("username");
+        Optional<User> userOpt = userService.getUserByUsername(currentUsername);
+        if (userOpt.isEmpty() || !userOpt.get().isAdmin()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (userService.userDoesNotExist(username)) {
+            return ResponseEntity.notFound().build();
+        }
+        User updatedUser = userService.changeUserRole(username);
+        return ResponseEntity.ok(userService.getUserDTO(updatedUser));
+    }
+
 }

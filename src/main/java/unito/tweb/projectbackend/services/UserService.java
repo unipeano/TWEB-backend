@@ -55,4 +55,12 @@ public class UserService {
     public void deleteUser(String username) {
         userRepository.deleteById(username);
     }
+
+    // pre: username esiste, role è USER
+    public User changeUserRole(String username) {
+        Optional<User> userOpt = userRepository.findById(username);
+        User user = userOpt.get();
+        user.setChefRole();
+        return userRepository.save(user);
+    }
 }

@@ -201,13 +201,9 @@ public class RecipeService {
 
     @Transactional
     public void deleteRecipe(Integer id) {
-        // Delete recipe ingredients
         this.recipeIngredientRepository.deleteAllByRecipeId(id);
-        // Delete recipe categories
         this.recipeCategoryRepository.deleteAllByRecipeId(id);
-        // Remove recipe from users' recipe books
         this.recipeBookService.removeRecipe(id);
-        // Delete the recipe itself
         this.recipeRepository.deleteById(id);
     }
 

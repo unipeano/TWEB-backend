@@ -118,10 +118,7 @@ The server will start on `http://localhost:7777`
 ## Configuration
 
 ### Server Port
-Default port is `7777`. Change it in `application.properties`:
-```properties
-server.port=8080
-```
+Default port is `7777`. 
 
 ### Database DDL Strategy
 - `create` - Drop tables and recreate on startup

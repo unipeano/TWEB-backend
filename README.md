@@ -1,4 +1,4 @@
-# Recipe Backend
+# TWEB (Web Technologies) Exam - Recipe Backend
 
 A Spring Boot backend application for managing recipes, ingredients, and recipe books. This project provides a RESTful API for user authentication, recipe management, and recipe collection organization.
 

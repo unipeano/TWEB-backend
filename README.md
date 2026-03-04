@@ -171,7 +171,7 @@ The application uses the following main entities:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## Support
 
@@ -179,4 +179,4 @@ For issues and questions, please open an issue in the repository.
 
 ## Authors
 
-University of Turin - TWEB Project
+Peano Mattia, University of Turin - TWEB Project

@@ -1,4 +1,4 @@
-# Recipe Backend
+# TWEB (Web Technologies) Project - Backend
 
 A Spring Boot backend application for managing recipes, ingredients, and recipe books. This project provides a RESTful API for user authentication, recipe management, and recipe collection organization.
 
@@ -118,10 +118,7 @@ The server will start on `http://localhost:7777`
 ## Configuration
 
 ### Server Port
-Default port is `7777`. Change it in `application.properties`:
-```properties
-server.port=8080
-```
+Default port is `7777`. 
 
 ### Database DDL Strategy
 - `create` - Drop tables and recreate on startup
@@ -171,7 +168,7 @@ The application uses the following main entities:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ## Support
 
@@ -179,4 +176,4 @@ For issues and questions, please open an issue in the repository.
 
 ## Authors
 
-University of Turin - TWEB Project
+Peano Mattia, University of Turin - TWEB Project
